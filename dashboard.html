@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboard — Demo</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="page">
+    <div class="dashboard-card" data-testid="dashboard">
+      <h1 data-testid="welcome-message">Welcome<span id="welcomeUser"></span>!</h1>
+      <p>This page is only reachable by actually submitting the login form
+         on index.html with a valid account - reaching it confirms a real
+         login flow ran, not just a seeded sessionStorage key.</p>
+      <a href="index.html" class="logout-link" id="logoutLink" data-testid="logout-link">Log out</a>
+    </div>
+  </div>
+
+  <script>
+    // Reads ?user= set by app.js's redirect so this page can show who
+    // "logged in" without a real backend/session of its own - purely
+    // cosmetic, not read by anything else.
+    const params = new URLSearchParams(window.location.search);
+    const user = params.get("user");
+    if (user) {
+      document.getElementById("welcomeUser").textContent = ", " + user;
+    }
+  </script>
+</body>
+</html>
