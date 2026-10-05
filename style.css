@@ -59,14 +59,14 @@ h1 { font-size: 1.3rem; margin: 0 0 20px; }
 
 .field input:focus { outline: 2px solid var(--teal); outline-offset: -1px; }
 
-#loginError {
+.field-error {
   min-height: 1.1em;
   font-size: 0.82rem;
   color: var(--error);
   margin-bottom: 12px;
 }
 
-#loginError:empty { margin-bottom: 0; }
+.field-error:empty { margin-bottom: 0; }
 
 button.primary {
   width: 100%;

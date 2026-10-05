@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign up — Demo</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="page">
+    <div class="login-card" data-testid="signup-email-form">
+      <h1>Create account</h1>
+
+      <div class="field">
+        <label for="signupEmail">Email</label>
+        <input type="email" id="signupEmail" name="email" data-testid="signup-email-input" autocomplete="off">
+      </div>
+
+      <div id="signupEmailError" class="field-error" data-testid="signup-email-error"></div>
+
+      <button type="button" class="primary" id="signupEmailContinue" data-testid="signup-email-continue">Continue</button>
+
+      <div class="demo-note">
+        Step 1 of 2. Demo data (for automation testing only):
+        <code>demo@example.com</code> is already "registered" - use it to
+        test the duplicate-email negative case. Any other value shaped
+        like an email moves on to the name step, carried forward as
+        <code>?email=</code> in the URL.
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

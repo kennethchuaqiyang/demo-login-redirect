@@ -21,9 +21,11 @@
         <input type="password" id="password" name="password" data-testid="password-input" autocomplete="off">
       </div>
 
-      <div id="loginError" data-testid="login-error-message"></div>
+      <div id="loginError" class="field-error" data-testid="login-error-message"></div>
 
       <button type="button" class="primary" id="loginButton" data-testid="login-button">Log in</button>
+
+      <a href="signup.html" class="logout-link" data-testid="signup-link">Need an account? Sign up</a>
 
       <div class="demo-note">
         Demo data (for automation testing only): one hardcoded account,
@@ -32,7 +34,10 @@
         correct login here does a REAL page redirect to dashboard.html -
         built specifically to test a capture mode that actually drives the
         login form (fill, submit, follow the redirect) instead of seeding
-        sessionStorage directly.
+        sessionStorage directly. "Sign up" above is a separate 3-step real
+        flow (email → name → complete) added 2026-10-05 for testing
+        multi-page wizards with a value (the email) that must carry
+        forward across steps.
       </div>
     </div>
   </div>

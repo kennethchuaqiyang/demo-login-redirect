@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign up complete — Demo</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="page">
+    <div class="dashboard-card" data-testid="signup-complete">
+      <h1 data-testid="signup-welcome-message">Account created<span id="signupWelcomeName"></span>!</h1>
+      <p>Signed up with <span id="signupCompleteEmail" data-testid="signup-complete-email"></span>.
+         This page is only reachable by completing all three signup steps
+         (sign up → email → name) - reaching it confirms a real multi-step
+         flow ran end to end, not a single-form shortcut.</p>
+      <a href="index.html" class="logout-link" data-testid="signup-login-link">Go to sign in</a>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
