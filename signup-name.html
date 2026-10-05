@@ -8,27 +8,75 @@
 </head>
 <body>
   <div class="page">
-    <div class="login-card" data-testid="signup-name-form">
-      <h1>Create account</h1>
-
-      <div class="field">
-        <label for="signupName">Full name</label>
-        <input type="text" id="signupName" name="name" data-testid="signup-name-input" autocomplete="off">
-      </div>
-
-      <div id="signupNameError" class="field-error" data-testid="signup-name-error"></div>
-
-      <button type="button" class="primary" id="signupNameContinue" data-testid="signup-name-continue">Complete sign up</button>
-
-      <div class="demo-note">
-        Step 2 of 2. The email from step 1 travels along as
-        <code>?email=</code> in the URL - the same cosmetic trick
-        dashboard.html uses for <code>?user=</code> - and is carried
-        forward again (with the name) when this step completes.
-      </div>
+    <!--
+      Same-URL loading screen (2026-10-05, same session as the
+      dom_capture.py fix this exists to exercise live, on the real site -
+      Kenneth's own live example was inspireresorts.com's own branded
+      loading screen: a splash sitting on the FINAL url, swapped for the
+      real page once an async fetch behind it resolves, with no second
+      navigation for Playwright's expect_navigation/page.goto("load") to
+      ever see). This step's real form (#signupName etc.) doesn't exist
+      in the DOM at all until the inline script below fetches
+      signup-verify-data.json and injects it - a genuine network request,
+      not a setTimeout, same distinction dom_capture.py's
+      _goto_and_settle/_click_and_settle docstrings call out: only a
+      network-driven loading screen like this one is what the capture
+      engine's "networkidle" wait actually catches.
+    -->
+    <div id="signupNameSplash" class="login-card" data-testid="signup-name-loading">
+      <p>Verifying email…</p>
     </div>
+    <div id="signupNameFormContainer" hidden></div>
   </div>
 
   <script src="app.js"></script>
+  <script>
+    // Paired with a deliberate 600ms minimum display time via
+    // Promise.all - a real, common UX pattern on its own (avoids a
+    // flash of loading state when the real request happens to resolve
+    // near-instantly, which it usually does for a tiny static JSON file
+    // like this one) that also happens to make this splash reliably
+    // visible/reproducible rather than racy - this fetch alone resolves
+    // too fast, locally and on GitHub Pages alike, to reliably
+    // outlast page.goto's "load" event without it.
+    Promise.all([
+      fetch("signup-verify-data.json").then((response) => response.json()),
+      new Promise((resolve) => setTimeout(resolve, 600)),
+    ])
+      .then(() => {
+        document.getElementById("signupNameSplash").remove();
+        const container = document.getElementById("signupNameFormContainer");
+        container.hidden = false;
+        container.innerHTML = `
+          <div class="login-card" data-testid="signup-name-form">
+            <h1>Create account</h1>
+
+            <div class="field">
+              <label for="signupName">Full name</label>
+              <input type="text" id="signupName" name="name" data-testid="signup-name-input" autocomplete="off">
+            </div>
+
+            <div id="signupNameError" class="field-error" data-testid="signup-name-error"></div>
+
+            <button type="button" class="primary" id="signupNameContinue" data-testid="signup-name-continue">Complete sign up</button>
+
+            <div class="demo-note">
+              Step 2 of 2. The email from step 1 travels along as
+              <code>?email=</code> in the URL - the same cosmetic trick
+              dashboard.html uses for <code>?user=</code> - and is carried
+              forward again (with the name) when this step completes.
+              This step's own form only appears once a real fetch
+              resolves (signup-verify-data.json) - a live demo of the
+              same-URL loading-screen pattern dom_capture.py's
+              _goto_and_settle/_click_and_settle now wait out.
+            </div>
+          </div>
+        `;
+        // app.js defines this but doesn't call it - the form it wires up
+        // doesn't exist yet when app.js itself runs, unlike every other
+        // page's block in that file. See app.js's own comment.
+        initSignupNameStep();
+      });
+  </script>
 </body>
 </html>

@@ -12,6 +12,14 @@
 // demo-shopping-nav's app.js uses for its multiple pages, rather than
 // splitting into one script per page. (dashboard.html keeps its own
 // tiny inline script for its cosmetic ?user= welcome - unchanged.)
+//
+// One exception: signup-name.html's own block (below) is a function,
+// not a top-level guarded block like the others - that page now shows a
+// same-URL loading screen before its real form exists at all (added the
+// same session as dom_capture.py's fix for exactly that pattern,
+// Kenneth's live example was inspireresorts.com's own), so its elements
+// genuinely aren't there yet when this script first runs. See that
+// block's own comment.
 
 const ACCOUNTS = [{ username: "demo", password: "Demo@123" }];
 
@@ -106,12 +114,25 @@ if (signupEmailInput && signupEmailError && signupEmailContinue) {
 }
 
 // --- signup-name.html: step 2, name ---
+//
+// Wrapped in a function, not run at top level like every other block in
+// this file - 2026-10-05, same session as the dom_capture.py "same-URL
+// loading screen" fix this page now demonstrates live (Kenneth's own
+// example was inspireresorts.com's own branded loading screen):
+// signup-name.html's real form doesn't exist in the DOM until its own
+// inline script fetches signup-verify-data.json and injects it,
+// replacing a splash placeholder - looking these elements up at
+// script-load time, the way every other block here does, would always
+// find them missing. signup-name.html's inline script calls this itself
+// once the real markup is actually in place.
 
-const signupNameInput = document.getElementById("signupName");
-const signupNameError = document.getElementById("signupNameError");
-const signupNameContinue = document.getElementById("signupNameContinue");
+function initSignupNameStep() {
+  const signupNameInput = document.getElementById("signupName");
+  const signupNameError = document.getElementById("signupNameError");
+  const signupNameContinue = document.getElementById("signupNameContinue");
 
-if (signupNameInput && signupNameError && signupNameContinue) {
+  if (!signupNameInput || !signupNameError || !signupNameContinue) return;
+
   // Carried forward from step 1's redirect - see signup.html's own note.
   const email = new URLSearchParams(window.location.search).get("email") || "";
 
